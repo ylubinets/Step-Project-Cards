@@ -162,5 +162,31 @@ searchBtn.addEventListener('click', function (){
             onDragAndDrop();
         })
     })
-
 })
+
+/* Check Authorisation*/
+
+function checkAuth () {
+    if(localStorage.getItem('token') !== null || localStorage.getItem('token') !== undefined){
+        document.getElementById('logInHtml').remove();
+        document.getElementById('placeForCreateVisitButton').innerHTML = Button.createVisitButton();
+        document.getElementById('filter-container').style.display = 'block';
+
+        let allCardsFromDataBase = Card.getAllCards();
+
+        allCardsFromDataBase
+            .then(function (array) {
+                if (array.length !== 0) {
+                    document.getElementById('noItemsAdded').classList.add('disable')
+                    array.forEach(function (element) {
+                        allCardsContainer.insertAdjacentHTML("beforeend", `${Card.createCard(element)}`);
+                    })
+                } else {
+                    document.getElementById('noItemsAdded').classList.remove('disable');
+                }
+            })
+            .then(onDragAndDrop);
+    }
+}
+
+checkAuth();
