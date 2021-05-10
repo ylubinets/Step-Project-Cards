@@ -165,3 +165,31 @@ searchBtn.addEventListener('click', function (){
 
 /* Check Authorisation*/
 
+function checkAuth() {
+    let token = localStorage.getItem('token')
+
+    if(token){
+        document.getElementById('logInHtml').remove();
+        document.getElementById('placeForCreateVisitButton').innerHTML = Button.createVisitButton();
+        document.getElementById('filter-container').style.display = 'block';
+
+        let allCardsFromDataBase = Card.getAllCards();
+
+        allCardsFromDataBase
+            .then(function (array) {
+                if (array.length !== 0) {
+                    document.getElementById('noItemsAdded').classList.add('disable')
+                    array.forEach(function (element) {
+                        allCardsContainer.insertAdjacentHTML("beforeend", `${Card.createCard(element)}`);
+                    })
+                } else {
+                    document.getElementById('noItemsAdded').classList.remove('disable');
+                }
+            })
+            .then(onDragAndDrop);
+    } else if (!token) {
+        document.getElementById('createVisitBtn').remove();
+        document.getElementById('filter-container').style.display = 'none';
+    }
+}
+checkAuth()
